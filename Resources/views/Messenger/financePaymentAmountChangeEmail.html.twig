@@ -1,0 +1,24 @@
+{% extends '/email.html.twig' %}
+
+{% block content %}
+    {{ display.paragraph('Hi,') }}
+
+    {{ display.paragraph('The following Educational Visit has had a change to the full payment amount:') }}
+
+    {{ display.dl({
+        'Visit' : visit.title,
+        'Academic year' : visit.academicYear|app_academic_year,
+        'Organiser' : visit.organiser,
+        'Original full payment amount' : original.fullPaymentAmount|format_money(null),
+        'New full payment amount' : visit.fullPaymentDeadline|petroc_date,
+        'EV number' : visit.evNumber,
+        'Cost code' : visit.costCode
+
+    }) }}
+
+    {{ display.action(petroc_url('cis_educational_visit.detail', visit), 'View') }}
+
+    {{ display.signature('Thank You') }}
+{% endblock %}
+
+{% block subject %}Educational Visit Full Payment Amount Change{% endblock %}

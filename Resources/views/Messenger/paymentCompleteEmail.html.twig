@@ -1,0 +1,9 @@
+{% extends '/email.html.twig' %}
+
+{% block content %}
+    {{ display.paragraph('Hi ' ~ student.firstName|init_cap_name ~ ',') }}
+
+    {{ display.paragraph(visit.paymentCompleteEmailContent) }}
+{% endblock %}
+
+{% block subject %}{{ visit.paymentCompleteEmailSubject }}{% endblock %}

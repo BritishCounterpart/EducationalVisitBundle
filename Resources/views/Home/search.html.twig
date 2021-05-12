@@ -1,0 +1,59 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Search{% endblock %}
+{% block content_heading %}Search{% endblock %}
+{% block content_heading_buttons %}
+    {{ petroc_button({ url : petroc_path('cis_educational_visit.detail.add'), text :  'Add Visit', action : 'add'}) }}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit :  'Search'}}) }}
+    {{ form_errors(form) }}
+    {{ form_row(form.academicYear) }}
+    {{ form_row(form.keyword) }}
+    {{ form_row(form.category) }}
+    {{ form_row(form.area) }}
+    {{ form_row(form.organiser) }}
+    {{ form_row(form.orderBy) }}
+    {{ form_end(form) }}
+
+    {% if filter.filtered %}
+        {% if filter.result|length > 0 %}
+            {% set body =[] %}
+            {% for visit in filter.result %}
+                {% set actions %}
+                    <div class="btn-group">
+                        {{ petroc_button({
+                            url: petroc_path('cis_educational_visit.detail', visit),
+                            action: 'view'
+                        }) }}
+                    </div>
+                {% endset %}
+                {% set body = petroc_push(body, {
+                    'ev-number' : visit.evNumber,
+                    'educational-visit' : visit.title,
+                    'status' : display.visit_status_badge(visit),
+                    'dates' : display.visit_start_and_end(visit),
+                    'organiser' : visit.organiser,
+                    'action' : actions
+                }) %}
+            {% endfor %}
+
+            {{ petroc_table({
+                header : {
+                    'ev-number' : 'EV Number',
+                    'educational-visit' : 'Educational Visit',
+                    'status' : 'Status',
+                    'dates' : 'Dates',
+                    'organiser' : 'Organiser',
+                    'action' : 'Actions'
+                },
+                body : body
+            }) }}
+        {% else %}
+            {{ no_records('No educational visits found.') }}
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

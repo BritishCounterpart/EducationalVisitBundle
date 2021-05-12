@@ -1,0 +1,18 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+
+{% set content %}
+    <div class="list-group">
+        {% for visit in dashboard.visitsPendingMyApproval  %}
+            <a href="{{ petroc_path('cis_educational_visit.detail', visit) }}" class="list-group-item">
+                {{ visit.title }} <small class="text-muted">{{ visit.evNumber }}</small><br><small class="text-muted">{{ visit.organiser }}</small>
+            </a>
+        {% endfor %}
+    </div>
+{% endset %}
+
+{{ petroc_pane({
+    heading : 'Visits Pending My Approval',
+    icon : 'fa.paper-plane',
+    type : 'warning',
+    content : content
+}) }}

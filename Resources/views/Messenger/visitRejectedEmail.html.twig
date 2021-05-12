@@ -1,0 +1,21 @@
+{% extends '/email.html.twig' %}
+
+{% block content %}
+    {{ display.paragraph('Hi ' ~ visit.organiser.firstName|init_cap_name ~ ',') }}
+
+    {{ display.paragraph('The following Educational Visit has been rejected:') }}
+
+    {{ display.dl({
+        'Visit' : visit.title,
+        'Academic year' : visit.academicYear|app_academic_year,
+        'Rejected by' : user|init_cap_name,
+        'Rejected reason' : reason
+
+    }) }}
+
+    {{ display.action(petroc_url('cis_educational_visit.detail', visit), 'View Visit') }}
+
+    {{ display.signature('Thank You') }}
+{% endblock %}
+
+{% block subject %}Educational Visit Rejected{% endblock %}

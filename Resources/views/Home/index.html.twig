@@ -1,0 +1,21 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Dashboard{% endblock %}
+{% block content_heading %}Dashboard{% endblock %}
+{% block content_heading_buttons %}
+{{ petroc_button({ url : petroc_path('cis_educational_visit.detail.add'), text :  'Add Visit', action : 'add'}) }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if dashboard.visitsPendingMyApproval|length > 0 %}
+            {% include '@CisEducationalVisit/Home/Pane/visitsPendingMyApproval.html.twig' %}
+        {% endif %}
+        {% include '@CisEducationalVisit/Home/Pane/upcomingVisits.html.twig' %}
+    </div>
+    <div class="col-md-6">
+        {% include '@CisEducationalVisit/Home/Pane/visitsRequiringAttention.html.twig' %}
+    </div>
+</div>
+{% endblock %}

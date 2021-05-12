@@ -1,0 +1,44 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% set title %}
+    Excluded Students <small class="text-muted text-small">That Have Been Excluded From Importing</small>
+{% endset %}
+{% set content %}
+    {% if list.excludedStudentParticipants|length > 0 %}
+        {% set body = [] %}
+        {% for excludedStudentParticipant in list.excludedStudentParticipants %}
+            {% set student = excludedStudentParticipant.student %}
+            {% set actions %}
+                {% if has_access('cis_educational_visit.edit', visit) %}
+                    <div class="btn-group">
+                        {{ petroc_button({
+                            url : petroc_path('cis_educational_visit.participants.unexclude_student', excludedStudentParticipant),
+                            action : 'delete'
+                        }) }}
+                    </div>
+                {% endif %}
+            {% endset %}
+            {% set body = petroc_push(body, {
+                'id-number' : app_student_link(student.IdNumber),
+                'name' : student|init_cap_name,
+                'actions' : actions
+            }) %}
+        {% endfor %}
+        {{ petroc_table({
+            header : {
+                'id-number' : 'ID Number',
+                'name' : 'Name',
+                'actions' : 'Actions'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No excluded student participants found.') }}
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+    heading : title,
+    icon : 'fa.user-graduate',
+    type : 'info',
+    content : content
+}) }}

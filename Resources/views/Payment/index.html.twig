@@ -1,0 +1,93 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Payments{% endblock %}
+{% block content_heading %}Payments{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit :  'Filter'}}) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.paymentStatus) }}
+        {{ form_row(form.showNoLongerGoing) }}
+    {{ form_end(form) }}
+    {% if list.studentParticipantsPayments|length > 0 %}
+        {% set body %}
+            {% set totalsPaid = 0 %}
+            {% set totalsToPay = 0 %}
+            {% set totalsOutstanding = 0%}
+            {% for studentParticipantsPayment in list.studentParticipantsPayments %}
+                {% set studentParticipant = studentParticipantsPayment.studentParticipant %}
+                {% set student = studentParticipant.student %}
+                {% set payment = studentParticipantsPayment.payment %}
+                {% set actions %}
+                    <div class="btn-group">
+                        {% if visit.evNumber != null %}
+                            {% set options = {
+                                student : student,
+                                object : studentParticipant.id,
+                                reference : visit.evNumber,
+                                description : 'Educational Visit: ' ~ visit.title,
+                                returnUrl : petroc_path('cis_educational_visit.payments', visit)
+                            } %}
+                            {% if payment.paid != true %}
+                                {% set options = options|merge({costCode : visit.costCode}) %}
+                            {% endif %}
+                            {{ app_order_payments_button(options) }}
+                        {% endif %}
+                        {% if has_access('cis_educational_visit.edit', visit) %}
+                            {{ petroc_button({
+                                url : petroc_path('cis_educational_visit.payments.change_student_participant_payment_amount', studentParticipant),
+                                text : 'Change Payment Amount',
+                                icon : 'fa.pound-sign',
+                                brand : 'warning'
+                            }) }}
+                            {% if payment.amountPaid > 0 %}
+                                {{ petroc_button({
+                                    url : petroc_path('cis_educational_visit.payments.transfer_student_participant_payment', studentParticipant),
+                                    brand : 'danger',
+                                    text : 'Trasfer Payment',
+                                    icon : 'fa.cash-register'
+                                }) }}
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+                {% endset %}
+                {% set totalsPaid = totalsPaid + payment.amountPaid %}
+                {% set totalsToPay = totalsToPay + payment.requiredAmount %}
+                {% set totalsOutstanding = totalsOutstanding + payment.remainingAmount %}
+                <tr>
+                    <td class="count">{{ loop.index }}</td>
+                    <td class="id-number">{{ app_student_link(student.IdNumber) }}</td>
+                    <td class="name">{{ student|init_cap_name }}</td>
+                    <td class="can-go">{{ display.participant_can_go(studentParticipant, payment) }}</td>
+                    <td class="total-paid">{{ payment.amountPaid|format_money|raw }}</td>
+                    <td class="total-to-pay">{{ payment.requiredAmount|format_money|raw }}</td>
+                    <td class="total-outstanding">{{ payment.remainingAmount|format_money|raw }}</td>
+                    <td class="actions">{{ actions }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4"><strong>Totals</strong></td>
+                <td class="total-paid">{{ totalsPaid|format_money|raw  }}</td>
+                <td class="total-to-pay">{{ totalsToPay|format_money|raw  }}</td>
+                <td class="total-outstanding" colspan="2">{{ totalsOutstanding|format_money|raw  }}</td>
+            </tr>
+        {% endset %}
+        {{ petroc_table({
+            header : {
+                'count' : '#',
+                'id-number' : 'ID Number',
+                'name' : 'Name',
+                'can-go' : 'Can Go',
+                'total-paid' : 'Total Paid',
+                'total-to-pay' : 'Total to Pay',
+                'total-outstanding' : 'Total Outstanding',
+                'actions' : 'Actions'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No student participants found.') }}
+    {% endif %}
+{% endblock %}

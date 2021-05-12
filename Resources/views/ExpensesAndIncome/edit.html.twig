@@ -1,0 +1,43 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+
+{% set action = app.request.headers.get('referer') matches '/.*add/' ? 'Add' : 'Update' %}
+{% set title = action == 'Add' ? 'Add Expenses & Income' : 'Edit Expenses & Income' %}
+
+{% block title %}{{ parent() }} :: {{ title }}{% endblock %}
+{% block content_heading %}{{ title }}{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit : action, cancel : petroc_path('cis_educational_visit.expenses_and_income', visit) }} ) }}
+        {{ form_errors(form) }}
+        {{ panel_start('Expenses') }}
+            <div id="has-expenses">
+                {{ form_row(form.anyExpenses) }}
+            </div>
+            <div id="expenses">
+                {{ form_row(form.expenses, {display_table : true}) }}
+            </div>
+        {{ panel_end() }}
+        {{ panel_start('Income') }}
+            <div id="has-income">
+                {{ form_row(form.anyIncome) }}
+            </div>
+            <div id="income">
+                {{ petroc_alert('The total income, should be equal to or more than the total cost of the trip.', 'info') }}
+                {% set tooltip %}
+                    This is the total that all students pay, it is not per student.
+                {% endset %}
+                {{ display.form_row_tooltip(form.studentsPays, tooltip) }}
+                {{ form_row(form.collegePays) }}
+                {{ form_row(form.otherPayInfo) }}
+                {% set tooltip %}
+                    This is the total income that isn’t coming from the students or college.
+                {% endset %}
+                {{ display.form_row_tooltip(form.otherPay, tooltip) }}
+            </div>
+        {{ panel_end() }}
+    {{ form_end(form) }}
+    {% do petroc_js_asset('cis-educational-visit/tooltips') %}
+    {% do petroc_js_asset('cis-educational-visit/toggle-has-expenses') %}
+    {% do petroc_js_asset('cis-educational-visit/toggle-has-income') %}
+{% endblock %}

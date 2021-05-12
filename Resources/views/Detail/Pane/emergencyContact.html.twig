@@ -1,0 +1,15 @@
+{% set content %}
+    {{ dl_start() }}
+        {{ dl_row('Emergency contact', visit.emergencyContact) }}
+        {{ dl_row('Second emergency contact name', visit.secondContactName) }}
+        {{ dl_row('Second emergency contact landline', visit.secondContactNumber) }}
+        {{ dl_row('Second emergency contact mobile', visit.secondContactMobile) }}
+    {{ dl_end() }}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Emergency Contact',
+     icon : 'fa.ambulance',
+     type : 'warning',
+     content : content
+}) }}

@@ -1,0 +1,39 @@
+{% extends '/email.html.twig' %}
+
+{% block content %}
+    {{ display.paragraph('Hi,') }}
+
+    {{ display.paragraph('The Details have changed on the following approved educational visit: ' ~ visit.title) }}
+
+    {{ display.paragraph('Original Details:') }}
+
+    {{ display.dl({
+        'Category' : originalVisit.category|app_general_code('EDUCATIONAL_VISIT_CATEGORY'),
+        'Location' : originalVisit.location,
+        'Start date' : originalVisit.startDate|petroc_date,
+        'Start time' : originalVisit.startTime|petroc_time,
+        'End date' : originalVisit.endDate|petroc_date,
+        'End time' : originalVisit.endTime|petroc_time,
+        'Full payment amount' : originalVisit.fullPaymentAmount|format_money('text')
+
+    }) }}
+
+    {{ display.paragraph('New Details:') }}
+
+    {{ display.dl({
+        'Category' : visit.category|app_general_code('EDUCATIONAL_VISIT_CATEGORY'),
+        'Location' : visit.location,
+        'Start date' : visit.startDate|petroc_date,
+        'Start time' : visit.startTime|petroc_time,
+        'End date' : visit.endDate|petroc_date,
+        'End time' : visit.endTime|petroc_time,
+        'Full payment amount' : visit.fullPaymentAmount|format_money('text')
+
+    }) }}
+
+    {{ display.action(petroc_url('cis_educational_visit.detail', visit), 'View Visit') }}
+
+    {{ display.signature('Thank You') }}
+{% endblock %}
+
+{% block subject %}Educational Visit Details Changed{% endblock %}

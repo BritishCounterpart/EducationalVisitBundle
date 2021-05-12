@@ -1,0 +1,21 @@
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+{% set student = studentParticipant.student %}
+{% block title %}{{ parent() }} :: Change {{ student|init_cap_name }} Payment Amount{% endblock %}
+{% block content_heading %}Change {{ student|init_cap_name }} Payment Amount{% endblock %}
+
+{% block content %}
+    {{ dl({
+        'Visit' : visit.title,
+        'Academic Year' : visit.academicYear|app_academic_year,
+        'Full payment amount' : visit.fullPaymentAmount|format_money,
+        'Full payment deadline' : visit.fullPaymentDeadline|petroc_date,
+        'Fisrt payment amount' : visit.firstPaymentAmount|format_money,
+        'Fisrt payment deadline' : visit.firstPaymentDeadline|petroc_date
+
+    }) }}
+    {{ form_start(form, {view_options : {submit : 'Change', cancel : petroc_path('cis_educational_visit.payments', visit) }} ) }}
+    {{ form_errors(form) }}
+        {{ form_row(form.fullPaymentAmount) }}
+        {{ form_row(form.firstPaymentAmount) }}
+    {{ form_end(form) }}
+{% endblock %}

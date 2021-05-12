@@ -1,0 +1,11 @@
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Upload Itinerary{% endblock %}
+{% block content_heading %}Upload Itinerary{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit : 'Upload', cancel : petroc_path('cis_educational_visit.itinerary', visit) }} ) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.file) }}
+    {{ form_end(form) }}
+{% endblock %}

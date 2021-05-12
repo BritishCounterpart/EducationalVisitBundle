@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="cis_educational_visit.student.add_visit_consent" path="/{id}/add-visit-consent">
+        <default key="_controller">CisEducationalVisitBundle:Student:addVisitConsent</default>
+    </route>
+
+    <route id="cis_educational_visit.student" path="/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Student:index</default>
+    </route>
+
+</routes>

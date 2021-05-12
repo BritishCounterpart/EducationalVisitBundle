@@ -1,0 +1,86 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Details{% endblock %}
+{% block content_heading %}Details{% endblock %}
+
+{% block content_heading_buttons %}
+    <div class="btn-group">
+        {% if has_access('cis_educational_visit.approval.request', visit) %}
+            {{ petroc_button({
+                url : petroc_path('cis_educational_visit.approval.request', visit),
+                text : 'Request Approval',
+                icon : 'fa.paper-plane',
+                brand : 'success'
+            }) }}
+        {% endif %}
+        {% if has_access('cis_educational_visit.finance') and visit.fullPaymentAmount > 0 %}
+            {% set action = 'Add' %}
+            {% if visit.evNumber != null or visit.costCode != null %}
+                {% set action = 'Edit '%}
+            {% endif %}
+            {{ petroc_button({
+                url : petroc_path('cis_educational_visit.detail.finance_codes', visit),
+                text : action ~' Finance Codes',
+                icon : 'fa.file-invoice-dollar',
+                brand : 'warning'
+            }) }}
+        {% endif %}
+        {% if has_access('cis_educational_visit.edit', visit) %}
+            {% if visit.status == 'Approved' %}
+                {{ petroc_button({
+                    url : petroc_path('cis_educational_visit.detail.complete', visit),
+                    text : 'Complete Visit',
+                    brand : 'success',
+                    icon : 'fa.check'
+                }) }}
+            {% endif %}
+            {% if visit.status != 'Completed' %}
+                {{ petroc_button({
+                    url : petroc_path('cis_educational_visit.detail.cancel', visit),
+                    text : 'Cancel Visit',
+                    brand : 'danger',
+                    icon : 'fa.ban'
+                }) }}
+            {% endif %}
+            {{ petroc_button({
+                url : petroc_path('cis_educational_visit.detail.edit', visit),
+                text : 'Edit Detail',
+                action : 'edit'
+            }) }}
+            {% if visit.status == 'Planned' %}
+                {{ petroc_button({
+                    url : petroc_path('cis_educational_visit.detail.delete', visit),
+                    action : 'delete'
+                }) }}
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if has_access('cis_educational_visit.approval.can_approve', visit) %}
+        {% set content %}
+            <b>Approval Action?</b>
+            <p>{{ petroc_link(petroc_path('cis_educational_visit.approval.approve', visit), 'Approve') }} or {{ petroc_link(petroc_path('cis_educational_visit.approval.reject', visit), 'Reject') }} this educational visit.</p>
+        {% endset %}
+        {{ petroc_alert(content, 'info') }}
+    {% endif %}
+
+    {% if visit.issues|length > 0 %}
+        {{ petroc_alert('<strong>Issues:</strong> ' ~ visit.issues|join(', '), 'danger') }}
+    {% endif %}
+<div class="row">
+    <div class="col-md-6">
+        {% include '@CisEducationalVisit/Detail/Pane/main.html.twig' %}
+        {% include '@CisEducationalVisit/Detail/Pane/dates.html.twig' %}
+        {% if visit.fullPaymentAmount > 0  %}
+            {% include '@CisEducationalVisit/Detail/Pane/payment.html.twig' %}
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {% include '@CisEducationalVisit/Detail/Pane/organiser.html.twig' %}
+        {% include '@CisEducationalVisit/Detail/Pane/emergencyContact.html.twig' %}
+        {% include '@CisEducationalVisit/Detail/Pane/participants.html.twig' %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+
+{% if visit is defined %}
+    {% set route = petroc_path('cis_educational_visit.detail', visit) %}
+{% endif %}
+
+{% set visit = visit|default(null) %}
+
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: {{ action|default('Edit') }} Detail{% endblock %}
+{% block content_heading %}{{ action|default('Edit') }}  Detail{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit : action|default('Update'), cancel : route }} ) }}
+        {{ form_errors(form) }}
+        {{ panel_start('Organiser') }}
+            {{ form_row(form.organiser) }}
+            {{ form_row(form.organiserMobile) }}
+            {{ form_row(form.secondOrganiserMobile) }}
+            {{ panel_end() }}
+            {{ panel_start('Main') }}
+            {{ petroc_alert('Title, location, description and dates are publicy visible.', 'info') }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.location) }}
+            {% set tooltip %}
+                <p>Day Trip (Low Risk) – This option should be selected if you are running a low risk trip inside college hours.</p>
+                <p>Overnight UK/Day Trip (High Risk) – This option should be selected if you are running a overnight trip or a low risk day trip outside of college hours.</p>
+                <p>Overseas (High Risk) - This option should be selected if you are running a trip outside the UK.</p>
+            {% endset %}
+            {{ display.form_row_tooltip(form.category, tooltip, 2, 10) }}
+            {% set tooltip %}
+                Ensure this is changed to YES as Offsite Activities consent is required in 99.9% of cases.
+            {% endset %}
+            {{ display.form_row_tooltip(form.osaRequired, tooltip, 2, 10) }}
+            {{ form_row(form.area) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.showOnCollegeCalendar) }}
+            {{ form_row(form.riskAssessments) }}
+        {{ panel_end() }}
+        {{ panel_start('Participants') }}
+            {{ display.form_row_tooltip(form.proposedNumberOfStudents, null, 3, 9) }}
+            {% set tooltip %}
+                This should be the minimum number of students that can go to enable the visit to run.
+            {% endset %}
+            {{ display.form_row_tooltip(form.minimumNumberOfStudents, tooltip, 3, 9) }}
+            {% set tooltip %}
+                This should be the maximum number of students that can go on the visit.
+            {% endset %}
+            {{ display.form_row_tooltip(form.maximumNumberOfStudents, tooltip, 3, 9) }}
+            {% set tooltip %}
+                Please bear in mind the staff to student ratio (1:20 Low Risk) or (1:10 High Risk) to comply with Health & Safety regulations.
+            {% endset %}
+            {{ display.form_row_tooltip(form.proposedNumberOfStaff, tooltip, 3, 9) }}
+        {{ panel_end() }}
+        {{ panel_start('Dates') }}
+            {{ petroc_alert('Ensure dates and times are correct, as this is used to mark registers.', 'info') }}
+            {{ form_row(form.academicYear) }}
+            {{ form_row(form.startDate) }}
+            {{ form_row(form.endDate) }}
+            {% set tooltip %}
+                This populates the registers so please ensure that you enter the times that will cover all the registers that the learners will be absent from, e.g, start time 09:00 and end time 16:30.
+            {% endset %}
+            {{ display.form_row_tooltip(form.startTime, tooltip) }}
+            {{ display.form_row_tooltip(form.endTime, tooltip) }}
+            {{ form_row(form.startTime) }}
+            {{ form_row(form.endTime) }}
+            {{ form_row(form.recurrencePattern) }}
+        {{ panel_end() }}
+        {{ panel_start('Emergency Contact') }}
+            {{ petroc_alert('Emergency contact details are located in the Petroc Directory, please ensure this is up-to-date.', 'info') }}
+            {% set tooltip %}
+                This <u><b>MUST BE</b></u> either the Assistant Principal/Head of Faculty or relevant Faculty Manager.
+            {% endset %}
+            {{ display.form_row_tooltip(form.emergencyContact, tooltip) }}
+            {{ petroc_alert('Only required for high risk categories.', 'info') }}
+            {{ display.form_row_tooltip(form.secondEmergencyContactName, null, 3, 9) }}
+            {% set tooltip %}
+                Please ensure that these contact numbers are for both inside and outside of college hours.
+            {% endset %}
+            {{ display.form_row_tooltip(form.secondEmergencyContactLandline, tooltip, 3, 9) }}
+            {{ display.form_row_tooltip(form.secondEmergencyContactMobile, tooltip, 3, 9) }}
+        {{ panel_end() }}
+        {{ panel_start('Payment') }}
+            <div id="payment-required">
+                {{ form_row(form.paymentRequired) }}
+            </div>
+                <div id="payment-details">
+                {% set tooltip %}
+                    This should be the total amount each learner is expected to pay.
+                {% endset %}
+                {{ display.form_row_tooltip(form.fullPaymentAmount, tooltip) }}
+                {% set tooltip %}
+                    The deadline for payments <u><b>MUST BE</b></u> set prior to incurring any expenditure.
+                {% endset %}
+                {{ display.form_row_tooltip(form.fullPaymentDeadline, tooltip) }}
+                {% set tooltip %}
+                    To be completed if learners are expected to pay a deposit.
+                {% endset %}
+                {{ display.form_row_tooltip(form.firstPaymentAmount, tooltip) }}
+                {% set tooltip %}
+                    Please note the deadline for this must be set prior to any deposit payments being sent to external companies/organisations as we <u><b>MUST</b></u> ensure that there is enough income to cover any expenditure.
+                {% endset %}
+                {{ display.form_row_tooltip(form.firstPaymentDeadline, tooltip) }}
+                {{ form_row(form.firstPaymentDeadline) }}
+                {{ petroc_alert('<strong>Payment Complete Email.</strong> Once a participant has paid, they will be emailed the following:', 'info') }}
+                <div id="send-payment-email">
+                    {{ form_row(form.paymentCompleteEmail) }}
+                </div>
+                <div id="payment-email">
+                    {{ form_row(form.replyToEmailAddress) }}
+                    {{ form_row(form.emailSubject) }}
+                    {{ form_row(form.emailContent) }}
+                </div>
+            </div>
+        {{ panel_end() }}
+    {{ form_end(form) }}
+    {% do petroc_js_asset('cis-educational-visit/tooltips') %}
+    {% do petroc_js_asset('cis-educational-visit/toggle-payment-section') %}
+    {% do petroc_js_asset('cis-educational-visit/toggle-payment-complete-email') %}
+{% endblock %}

@@ -1,0 +1,135 @@
+{% macro visit_status_badge(visit) %}
+    {% set status = visit.status %}
+    {% if status == 'Approved' %}
+        <span class="badge status-badge badge-success">{{ status }}</span>
+    {% elseif status == 'Cancelled' %}
+        <span class="badge status-badge badge-danger">{{ status }}</span>
+    {% elseif status == 'Completed' %}
+        <span class="badge status-badge">{{ status }}</span>
+    {% elseif status == 'Not Approved' %}
+        <span class="badge status-badge badge-warning">{{ status }}</span>
+    {% elseif status == 'Pending Approval' %}
+        <span class="badge status-badge badge-info">{{ status }}</span>
+    {% elseif status == 'Planned' %}
+        <span class="badge status-badge badge-primary">{{ status }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro visit_start_date_badge(visit) %}
+    <span class="badge">{{ visit.startDate|petroc_date }}</span>
+{% endmacro %}
+
+{% macro visit_issue_badges(visit) %}
+    {% for issue in visit.issues %}
+        <span class="badge status-badge badge-warning">{{ issue }}</span>
+    {% endfor %}
+{% endmacro %}
+
+{% macro visit_start_and_end(visit) %}
+    {% if visit.startDate %}{{ visit.startDate|petroc_date }} {{ visit.startTime|petroc_time }}{% endif %}{% if visit.endDate %} - {{ visit.endDate|petroc_date }} {{ visit.endTime|petroc_time }}{% endif %}
+{% endmacro %}
+
+{% macro form_row_tooltip(formRow, tooltip = null, colOne = 2, colTwo = 10) %}
+    <div class="form-group row {{ formRow.vars.errors|length > 0 ? 'has-error' : '' }}">
+        <div class="col-sm-{{ colOne }}">{{ form_label(formRow) }} {% if tooltip != null %} <i class="fas fa-info-circle help-icon" data-toggle="tooltip" data-html="true" title="{{ tooltip}}"></i>{% endif %}</div>
+        <div class="col-sm-{{ colTwo }}">{{ form_widget(formRow) }}{{ form_errors(formRow) }}</div>
+    </div>
+{% endmacro %}
+
+{% macro emergency_contacts(student) %}
+    {% for contact in student.contacts %}
+        <p>
+        {{ contact|init_cap_name }}
+        {% if contact.homePhone != null %}
+            <br/><b>Home:</b> {{ contact.homePhone }}
+        {% endif %}
+        {% if contact.mobile != null %}
+            <br/><b>Mobile:</b> {{ contact.mobile }}
+        {% endif %}
+        {% if contact.workPhone != null %}
+            <br/><b>Work:</b> {{ contact.workPhone }}
+        {% endif %}
+        </p>
+    {% endfor %}
+{% endmacro %}
+
+{% macro tooltip(tooltip) %}
+    <i class="fas fa-info-circle help-icon" data-toggle="tooltip" data-html="true" title="{{ tooltip}}"></i>
+{% endmacro %}
+
+{% macro student_phone_numbers(student) %}
+    {% if student.phone != null %}
+        <b>Home:</b> {{ student.phone }}<br/>
+    {% endif %}
+    {% if student.mobile != null %}
+        <b>Mobile:</b> {{ student.mobile }}
+    {% endif %}
+{% endmacro %}
+
+{% macro employee_work_phone_numbers(employee) %}
+    {% if employee != null %}
+        {% for location in employee.locations %}
+            {% if not loop.first %}
+            <br/>
+            {% endif %}
+            {{ location.phone }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro cross_or_tick(boolean) %}
+    {% if boolean == true %}
+        {{ petroc_icon({name : 'fa.check-circle', brand : 'success'}) }}
+    {% else %}
+        {{ petroc_icon({name : 'fa.times-circle', brand : 'danger'}) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro participant_confirmed(payment) %}
+    {% if cis_educational_visit_participant_confirmed(payment) == true %}
+        {{ petroc_icon({name : 'fa.check-circle', brand : 'success'}) }}
+    {% else %}
+        {{ petroc_icon({name : 'fa.times-circle', brand : 'danger'}) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro participant_visit_consent(studentParticipant) %}
+    {% if studentParticipant.hasVisitConsent == 'Yes' %}
+        {{ petroc_icon({name : 'fa.check-circle', brand : 'success'}) }}
+    {% elseif studentParticipant.hasVisitConsent == 'No' %}
+        {{ petroc_icon({name : 'fa.times-circle', brand : 'danger'}) }}
+    {% else %}
+        {{ studentParticipant.hasVisitConsent }}
+    {% endif %}
+{% endmacro %}
+
+{% macro participant_missing_osa_consent(studentParticipant) %}
+    {% set missingOsaConsent = cis_educational_visit_participant_missing_osa_consent(studentParticipant) %}
+    {% if missingOsaConsent|length < 1 %}
+        <i class="fas fa-check-circle text-success"></i>
+    {% else %}
+        <i class="fas fa-times-circle text-danger" data-toggle="tooltip" data-html="true" title="{{ missingOsaConsent|join(', ') }}"></i>
+    {% endif %}
+{% endmacro %}
+
+{% macro participant_can_go(studentParticipant, payment) %}
+    {% set missingOsaConsent = cis_educational_visit_participant_missing_osa_consent(studentParticipant) %}
+    {% set canGo = cis_educational_visit_participant_can_go(studentParticipant, missingOsaConsent, payment)  %}
+    {% if canGo == true %}
+        {{ petroc_icon({name : 'fa.check-circle', brand : 'success'}) }}
+    {% else %}
+        {{ petroc_icon({name : 'fa.times-circle', brand : 'danger'}) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro info_notice(items) %}
+    {% set info %}
+        {{ petroc_icon('fa.info-circle') }} <strong>Information</strong>
+        <ul>
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endset %}
+    {{ petroc_alert(info, 'info') }}
+{% endmacro %}

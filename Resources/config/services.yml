@@ -1,0 +1,54 @@
+services:
+    _defaults:
+        autowire: true
+        public: false
+        autoconfigure: true
+
+    Cis\EducationalVisitBundle\:
+        resource: "../../{Alert,Command,CommandBus,Messenger,Twig,Util,Form,Validator}"
+        exclude: "../../CommandBus/**/*Command.php"
+
+    Cis\EducationalVisitBundle\Controller\DetailController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    Cis\EducationalVisitBundle\Controller\ExpensesAndIncomeController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    Cis\EducationalVisitBundle\Controller\ParticipantController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    Cis\EducationalVisitBundle\Controller\PaymentController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    Cis\EducationalVisitBundle\Controller\StudentController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    Cis\EducationalVisitBundle\Controller\ItineraryController:
+        public: true
+        tags: ['controller.service_arguments']
+
+
+    Cis\EducationalVisitBundle\Controller\ApprovalController:
+        public: true
+        tags: ['controller.service_arguments']
+
+    Cis\EducationalVisitBundle\Command\UpdateRegistersCommand:
+        arguments:
+            $academicYear: "%academic_year%"
+
+    Cis\EducationalVisitBundle\Command\PaymentCompleteEmailCommand:
+        arguments:
+            $academicYear: "%academic_year%"
+
+    Cis\EducationalVisitBundle\Command\SetVisitFullCommand:
+        arguments:
+            $academicYear: "%academic_year%"
+
+    Cis\EducationalVisitBundle\Command\RefreshStudentParticipantsCommand:
+        arguments:
+            $academicYear: "%academic_year%"

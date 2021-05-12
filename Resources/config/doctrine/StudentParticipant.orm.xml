@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Cis\EducationalVisitBundle\Entity\StudentParticipant" table="PETROC_EDUCATIONAL_VISIT_STUDENT_PARTICIPANT" repository-class="Cis\EducationalVisitBundle\Repository\StudentParticipantRepository">
+
+        <id name="id" type="integer" column="object_id">
+            <generator strategy="SEQUENCE" />
+            <sequence-generator sequence-name="record_id" allocation-size="1" />
+        </id>
+
+        <field name="createdOn" column="timestamp" type="datetime" nullable="false" />
+        <field name="fullPaymentAmount" column="full_payment_amount" type="float" nullable="true" />
+        <field name="firstPaymentAmount" column="first_payment_amount" type="float" nullable="true" />
+        <field name="hasVisitConsent" column="has_visit_consent" type="boolean" nullable="false" />
+        <field name="noLongerGoing" column="no_longer_going" type="boolean" nullable="false" />
+        <field name="paymentCompleteEmailSent" column="payment_complete_email_sent" type="boolean" nullable="false" />
+        <field name="deletedOn" column="deleted_on" type="datetime" nullable="true" />
+
+        <many-to-one field="visit" target-entity="Visit" inversed-by="studentParticipants" nullable="false" >
+            <join-column name="petroc_educational_visit" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="student" target-entity="App\Entity\Student\Student">
+            <join-column name="student" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="cohort" target-entity="App\Entity\Cohort\Cohort">
+            <join-column name="petroc_cohort" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <gedmo:soft-deleteable field-name="deletedOn" />
+
+    </entity>
+
+</doctrine-mapping>

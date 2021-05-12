@@ -1,0 +1,50 @@
+{% set heading %}
+    Staff Members
+    <div class="btn-group pull-right">
+        {{ petroc_button({
+            url : petroc_path('cis_educational_visit.participants.add_staff_participant', visit),
+            action : 'add'
+        }) }}
+    </div>
+{% endset %}
+
+{% set content %}
+    {% if list.staffParticipants|length > 0 %}
+        {% set body = [] %}
+        {% for staffParticipant in list.staffParticipants %}
+            {% set actions %}
+                {% if has_access('cis_educational_visit.edit', visit) %}
+                    <div class="btn-group">
+                        {{ petroc_button({
+                            url : petroc_path('cis_educational_visit.participants.delete_staff_participant', staffParticipant),
+                            action : 'delete'
+                        }) }}
+                    </div>
+                {% endif %}
+            {% endset %}
+            {% set body = petroc_push(body, {
+                'count' : loop.index,
+                'name' : staffParticipant.employee|init_cap_name,
+                'actions' : actions
+            }) %}
+        {% endfor %}
+
+        {{ petroc_table({
+            header : {
+                'count' : '#',
+                'name' : 'Name',
+                'actions' : 'Actions'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No staff participants found.') }}
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+    heading : heading,
+    icon : 'fa.user-friends',
+    type : 'warning',
+    content : content
+}) }}

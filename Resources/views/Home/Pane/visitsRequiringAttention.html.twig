@@ -1,0 +1,22 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+
+{% set content %}
+    {% if dashboard.visitsRequiringAttention|length > 0 %}
+        <div class="list-group">
+            {% for visit in dashboard.visitsRequiringAttention  %}
+                <a href="{{ petroc_path('cis_educational_visit.detail', visit) }}" class="list-group-item">
+                    {{ visit.title }} <small class="text-muted">{{ visit.evNumber }}</small><div class="pull-right">{{ display.visit_issue_badges(visit) }}</div><br><small class="text-muted">{{ visit.organiser }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ no_records('No educational visits requiring attention.') }}
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Visits Requiring Attention',
+     icon : 'fa.exclamation-circle',
+     type : 'danger',
+     content : content
+}) }}

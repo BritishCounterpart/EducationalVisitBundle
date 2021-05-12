@@ -1,0 +1,24 @@
+{{ petroc_csv_row([
+    'ID Number',
+    'First name',
+    'Surname',
+    'Address 1',
+    'Address 2',
+    'Address 3',
+    'Address 4',
+    'Postcode'
+]) }}
+
+{%- for studentParticipantsPayment in list.studentParticipantsPayments -%}
+    {%- set student = studentParticipantsPayment.studentParticipant.student -%}
+    {{petroc_csv_row([
+        student.idNumber,
+        student.firstName|init_cap_name,
+        student.surname|init_cap_name,
+        student.address1,
+        student.address2,
+        student.address3,
+        student.address4,
+        student.postcode
+    ]) }}
+{%- endfor -%}

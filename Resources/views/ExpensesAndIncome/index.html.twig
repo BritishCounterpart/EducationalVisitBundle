@@ -1,0 +1,19 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Expenses & Income{% endblock %}
+{% block content_heading %}Expenses & Income{% endblock %}
+{% block content_heading_buttons %}
+    {{ petroc_button({ url : petroc_path('cis_educational_visit.expenses_and_income.edit',visit), text :  'Edit', action : 'edit'}) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            {% include '@CisEducationalVisit/ExpensesAndIncome/Pane/expenses.html.twig' %}
+        </div>
+        <div class="col-md-6">
+            {% include '@CisEducationalVisit/ExpensesAndIncome/Pane/income.html.twig' %}
+        </div>
+    </div>
+    {% do petroc_js_asset('cis-educational-visit/tooltips') %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% set content %}
+    {{ dl_start() }}
+        {{ dl_row('Academic year', visit.academicYear|app_academic_year) }}
+        {{ dl_row('Start date', visit.startDate|petroc_date) }}
+        {{ dl_row('End date',  visit.endDate|petroc_date) }}
+        {{ dl_row('Start time', visit.startTime|petroc_time) }}
+        {{ dl_row('End time', visit.endTime|petroc_time) }}
+        {{ dl_row('Recurrence Pattern', visit.recurrencePattern) }}
+    {{ dl_end() }}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Dates',
+     icon : 'fa.calendar-alt',
+     type : 'info',
+     content : content
+}) }}

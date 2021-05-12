@@ -1,0 +1,126 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '@CisEducationalVisit/Student/layout.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+{% block content_heading %}Educational Visits{% endblock %}
+
+{% block content %}
+    {% if list|length > 0 %}
+        {% for item in list %}
+            {% set student = item.studentParticipant.student %}
+            {% set studentParticipant = item.studentParticipant %}
+            {% set visit = studentParticipant.visit %}
+            {% set payment = item.payment %}
+            {% set student = studentParticipant.student %}
+            {% set summary %}
+                <div class="row">
+                    <div class="col-md-6">
+                        {% set content %}
+                            {{ dl_start() }}
+                                {{ dl_row('Organiser', visit.organiser) }}
+                                {{ dl_row('Location', visit.location) }}
+                                {{ dl_row('Description', visit.description) }}
+                            {{ dl_end() }}
+                        {% endset %}
+                        {{ petroc_panel({
+                            header : 'Main Details',
+                            content : content
+                        }) }}
+
+                        {% set content %}
+                            {{ dl_start() }}
+                            {{ dl_row('Academic year', visit.academicYear|app_academic_year) }}
+                            {{ dl_row('Start date', visit.startDate|petroc_date) }}
+                            {{ dl_row('End date', visit.endDate|petroc_date) }}
+                            {{ dl_row('Start time', visit.startTime|petroc_time) }}
+                            {{ dl_row('End time', visit.endTime|petroc_time) }}
+                            {% if visit.recurrencePattern != null %}
+                                {{ dl_row('Recurrence Pattern', visit.recurrencePattern) }}
+                            {% endif %}
+                            {{ dl_end() }}
+                        {% endset %}
+                        {{ petroc_panel({
+                            header : 'Dates & Time',
+                            content : content
+                        }) }}
+
+                        {% set content %}
+                            {% if visit.itinerary != null %}
+                                {{ petroc_alert(petroc_link(petroc_path('cis_educational_visit.itinerary.download', visit.itinerary), 'Download Itinerary', { download : true}), 'info') }}
+                            {% else %}
+                                {{ petroc_alert('No Itinerary uploaded', 'danger') }}
+                            {% endif %}
+                        {% endset %}
+                        {{ petroc_panel({
+                            header : 'Itinerary',
+                            body : content
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {% set content %}
+                            {{ dl_start() }}
+                                {{ dl_row('Required amount', payment.requiredAmount|format_money) }}
+                                {{ dl_row('Amount paid', payment.amountPaid|format_money) }}
+                                {{ dl_row('Remaining amount', payment.requiredAmount|format_money) }}
+                            {{ dl_end() }}
+                        {% endset %}
+                        {{ petroc_panel({
+                            header : 'Payments',
+                            content : content
+                        }) }}
+
+                        {% set content %}
+                            {% set osa7consent %}
+                                {% set missing =  cis_educational_visit_participant_missing_osa_consent(studentParticipant) %}
+                                {{ display.participant_missing_osa_consent(studentParticipant) }}
+                                <div class="btn-group btn-group-xs pull-right">
+                                    {% if 'Missing Parent Consent' in missing and has_access('cis_educational_visit.student_participant_visit_consent', student) %}
+                                        {{ button_link(petroc_path('cis_student.osa.student', student), 'Add OSA Consent', {'icon' : 'fa.file-signature', 'class' : 'info', 'size' : 'xs'}) }}
+                                    {% endif %}
+                                    {% if 'Missing Student Consent' in missing and has_access('cis_student.osa.student', student) %}
+                                        {{ button_link(petroc_path('cis_student.osa.parent', student), 'Add OSA Consent', {'icon' : 'fa.file-signature', 'class' : 'info', 'size' : 'xs'}) }}
+                                    {% endif %}
+                                </div>
+                            {% endset %}
+                            {% set visitConsent %}
+                                {{ display.participant_visit_consent(studentParticipant) }}
+                                {% if studentParticipant.hasVisitConsent == 'No' and has_access('cis_educational_visit.student_participant_visit_consent', student) %}
+                                    <div class="btn-group btn-group-xs pull-right">
+                                        {{ button_link(petroc_path('cis_educational_visit.student.add_visit_consent', studentParticipant), 'Add Visit Consent', {'icon' : 'fa.file-signature', 'class' : 'info', 'size' : 'xs'}) }}
+                                    </div>
+                                {% endif %}
+                            {% endset %}
+                            {% set paymentComplete %}
+                                {{ display.cross_or_tick(payment.paid) }}
+                                {% if payment.paid == false %}
+                                    <div class="btn-group btn-group-xs pull-right">
+                                        {{ button_link('', 'Make Payment', {'icon' : 'fa.credit-card', 'class' : 'info', 'size' : 'xs'}) }}
+                                    </div>
+                                {% endif %}
+                            {% endset %}
+                            {{ dl_start() }}
+                            {{ dl_row('OSA 7 consent', osa7consent) }}
+                            {{ dl_row('Visit consent', visitConsent) }}
+                            {{ dl_row('Payments comlete', paymentComplete) }}
+                            {{ dl_row('Can go', display.participant_can_go(studentParticipant, payment)) }}
+                            {{ dl_end() }}
+                        {% endset %}
+                        {{ petroc_panel({
+                            header : 'Actions',
+                            content : content
+                        }) }}
+                    </div>
+                </div>
+            {% endset %}
+            {{ petroc_pane({
+                heading : visit.title,
+                icon : 'fa.campground',
+                type : 'info',
+                summary : summary
+            }) }}
+        {% endfor %}
+    {% else %}
+        {{ no_records('No visits found.') }}
+    {% endif %}
+    {% do petroc_js_asset('cis-educational-visit/tooltips') %}
+{% endblock %}

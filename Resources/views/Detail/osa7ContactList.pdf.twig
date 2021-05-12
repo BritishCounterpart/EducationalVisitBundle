@@ -1,0 +1,65 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '::print.html.twig' %}
+
+{% block heading  %}{{ visit.title ~ ' (' ~ visit.startDate|petroc_date  ~ ') - ' ~ visit.category|app_general_code('EDUCATIONAL_VISIT_CATEGORY')}}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <b>Organiser</b>
+                {{ dl({
+                    'Name' : visit.organiser,
+                    'Mobile' : visit.organiserMobile,
+                    '2<sup>nd</sup> mobile' : visit.organiserMobileSecond
+                }) }}
+        </div>
+        <div class="col-md-4">
+            <b>Emergency contact (At PETROC)</b>
+            {{ dl({
+                'Name' : visit.emergencyContact,
+                'Numbers' : display.employee_work_phone_numbers(visit.emergencyContact)
+            }) }}
+        </div>
+        <div class="col-md-4">
+            <b>2<sup>nd</sup> Emergency contact</b>
+            {{ dl({
+                'Name' : visit.secondContactName,
+                'Landline' : display.employee_work_phone_numbers(visit.secondContactNumber),
+                'Mobile' : display.employee_work_phone_numbers(visit.secondContactMobile)
+            }) }}
+        </div>
+    </div>
+
+    <b>Number of Students:</b> {{ participants|length }}
+
+    {% set body =[] %}
+    {% for participant in participants %}
+        {% set student = participant.student %}
+        {% set body = petroc_push(body, {
+            'id-number' : student.idNumber,
+            'name' : student|init_cap_name,
+            'contact-numbers' : display.student_phone_numbers(student),
+            'emergency-contacts' : display.emergency_contacts(student),
+            'osaConsent' : participant.osaConsent|bool2str,
+            'dietary-requirements' : participant.dietaryRequirements,
+            'medication' : participant.medication,
+            'alcohol-consent' : participant.alcoholConsent|bool2str,
+            '_class' : participant.osaConsent == false ? 'danger'
+        }) %}
+    {% endfor %}
+    {{ petroc_table({
+        header : {
+            'id-number' : 'ID Number',
+            'name' : 'Name',
+            'contact-numbers' : 'Contact Numbers',
+            'emergency-contacts' : 'Emergency Contacts',
+            'osaConsent' : 'OSA Consent',
+            'dietary-requirements' : 'Dietary Requirements',
+            'medication' : 'Medication',
+            'alcohol-consent' : 'Alcohol Consent'
+        },
+        body : body
+    }) }}
+
+{% endblock %}

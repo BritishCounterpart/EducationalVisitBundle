@@ -1,0 +1,25 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% set heading %}
+    Upcoming Visits <small class="text-muted pull-right">Next 90 Days</small>
+{% endset %}
+
+{% set content %}
+    {% if dashboard.upcomingVisits|length > 0 %}
+        <div class="list-group">
+            {% for visit in dashboard.upcomingVisits  %}
+                <a href="{{ petroc_path('cis_educational_visit.detail', visit) }}" class="list-group-item">
+                    {{ visit.title }} <small class="text-muted">{{ visit.evNumber }}</small><div class="pull-right">{{ display.visit_start_date_badge(visit) }}<br>{{ display.visit_status_badge(visit) }}</div><br><small class="text-muted">{{ visit.organiser }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ no_records('No upcoming educational visits.') }}
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+     heading : heading,
+     icon : 'fa.calendar-week',
+     type : 'success',
+     content : content
+}) }}

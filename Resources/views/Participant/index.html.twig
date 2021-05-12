@@ -1,0 +1,56 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+
+{% block title %}{{ parent() }} :: Participants{% endblock %}
+{% block content_heading %}Participants{% endblock %}
+{% block content_heading_buttons %}
+    <div class="btn-group">
+        {{ petroc_button({
+            url : petroc_path('cis_educational_visit.participants.osa_7_contact_list', visit),
+            brand : 'info',
+            text : 'OSA 7 - Contact List',
+            icon : 'fa.list'
+        }) }}
+        {{ petroc_button({
+            url : petroc_path('cis_educational_visit.participants.no_portal_access', visit),
+            brand : 'danger',
+            text : 'No Portal Access',
+            icon : 'fa.universal-access'
+        }) }}
+        {{ petroc_button({
+            url : petroc_path('cis_educational_visit.participants.marketing_consent', visit),
+            brand : 'warning',
+            text : 'Marketing Consent',
+            icon : 'fa.user-check'
+        }) }}
+    </div>
+{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit :  'Filter'}}) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.paymentStatus) }}
+        {{ form_row(form.showNoLongerGoing) }}
+    {{ form_end(form) }}
+    {% set items = [
+        'Students are added by adding a cohort, then they\’re imported.',
+        'If a cohort is removed or edited causing a student to no longer appear within a cohort, the student will be removed from the educational visit if there are no payments but if there are payments, they will be set as no longer going.',
+        'If a student is manually deleted, they will appear in the excluded students list, which prevents that student from being reimported from a cohort.'
+    ] %}
+    {{ display.info_notice(items) }}
+    <div class="row">
+        <div class="col-md-8">
+            {% include '@CisEducationalVisit/Participant/Pane/students.html.twig' %}
+        </div>
+        <div class="col-md-4">
+            {% include '@CisEducationalVisit/Participant/Pane/cohort.html.twig' %}
+            {% include '@CisEducationalVisit/Participant/Pane/excludedStudents.html.twig' %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% include '@CisEducationalVisit/Participant/Pane/staffMembers.html.twig' %}
+        </div>
+    </div>
+    {% do petroc_js_asset('cis-educational-visit/tooltips') %}
+{% endblock %}

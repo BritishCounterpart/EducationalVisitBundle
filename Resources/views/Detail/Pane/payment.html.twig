@@ -1,0 +1,18 @@
+{% set content %}
+    {{ dl_start() }}
+        {{ dl_row('Full payment amount', visit.fullPaymentAmount|format_money) }}
+        {{ dl_row('Full payment deadline', visit.fullPaymentDeadline|petroc_date) }}
+        {{ dl_row('Fisrt payment amount', visit.firstPaymentAmount|format_money) }}
+        {{ dl_row('Fisrt payment deadline', visit.firstPaymentDeadline|petroc_date) }}
+        {{ dl_row('Reply to email address', visit.paymentCompleteEmailReplyTo) }}
+        {{ dl_row('Email subject', visit.paymentCompleteEmailSubject) }}
+        {{ dl_row('Email content', visit.paymentCompleteEmailContent) }}
+    {{ dl_end() }}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Payment',
+     icon : 'fa.pound-sign',
+     type : 'success',
+     content : content
+}) }}

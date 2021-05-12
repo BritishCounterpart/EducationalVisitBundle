@@ -1,0 +1,22 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% set content %}
+    {{ dl_start() }}
+        {{ dl_row('Title', visit.title ~ ' <div class="pull-right">' ~ display.visit_status_badge(visit) ~ '</div>') }}
+        {{ dl_row('EV Number', visit.evNumber) }}
+        {{ dl_row('Cost code', visit.costCode) }}
+        {{ dl_row('Location', visit.location) }}
+        {{ dl_row('Category', visit.category|app_general_code('EDUCATIONAL_VISIT_CATEGORY')) }}
+        {{ dl_row('OSA Consent required', visit.osaRequired|bool2str) }}
+        {{ dl_row('Area', visit.area) }}
+        {{ dl_row('Description', visit.description) }}
+        {{ dl_row('College calendar', visit.toBeShownOnCalendar|bool2str) }}
+        {{ dl_row('Risk assessments', visit.riskAssessments|join(', ')) }}
+    {{ dl_end() }}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Main',
+     icon : 'fa.suitcase-rolling',
+     type : 'info',
+     content : content
+}) }}

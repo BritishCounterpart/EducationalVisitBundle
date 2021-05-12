@@ -1,0 +1,77 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '::print.html.twig' %}
+
+{% block heading  %}{{ visit.title ~ ' (' ~ visit.startDate|petroc_date  ~ ') - ' ~ visit.category|app_general_code('EDUCATIONAL_VISIT_CATEGORY')}}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <b>Organiser</b>
+            {{ dl({
+                'Name' : visit.organiser,
+                'Mobile' : visit.organiserMobile,
+                '2<sup>nd</sup> mobile' : visit.organiserMobileSecond
+            }) }}
+        </div>
+        <div class="col-md-4">
+            <b>Emergency contact (At PETROC)</b>
+            {{ dl({
+                'Name' : visit.emergencyContact,
+                'Numbers' : display.employee_work_phone_numbers(visit.emergencyContact)
+            }) }}
+        </div>
+        <div class="col-md-4">
+            <b>2<sup>nd</sup> Emergency contact</b>
+            {{ dl({
+                'Name' : visit.secondContactName,
+                'Landline' : display.employee_work_phone_numbers(visit.secondContactNumber),
+                'Mobile' : display.employee_work_phone_numbers(visit.secondContactMobile)
+            }) }}
+        </div>
+    </div>
+
+    {% set studentParticipantsPayments = list.studentParticipantsPayments %}
+    <b>Number of Students:</b> {{ studentParticipantsPayments|length }}
+
+    {% if studentParticipantsPayments|length > 0 %}
+        {% set body = [] %}
+        {% for studentParticipantsPayment in studentParticipantsPayments %}
+            {% set studentParticipant = studentParticipantsPayment.studentParticipant %}
+            {% set student = studentParticipant.student %}
+
+            {% set body = petroc_push(body, {
+                'count' : loop.index,
+                'id-number' : app_student_link(student.IdNumber),
+                'name' : student|init_cap_name,
+                'age' : student.ageToday,
+                'osa-consent' : display.participant_missing_osa_consent(studentParticipant),
+                'visit-consent' : display.participant_visit_consent(studentParticipant),
+                'alcohol-consent' : cis_educational_visit_participant_alcohol_consent(studentParticipant),
+                'dietary-requirements' : cis_educational_visit_participant_dietary_requirements(studentParticipant),
+                'medication' : cis_educational_visit_participant_medication(studentParticipant),
+                'health-and-welling' : cis_educational_visit_participant_health_and_welling(studentParticipant)|join(', '),
+                'difficulties-and-disabilities' : cis_educational_visit_participant_difficulties_and_disabilities(studentParticipant)|join(', '),
+            }) %}
+        {% endfor %}
+
+        {{ petroc_table({
+            header : {
+                'count' : '#',
+                'id-number' : 'ID Number',
+                'name' : 'Name',
+                'age' : 'Age',
+                'osa-consent' : 'OSA Consent',
+                'visit-consent' : 'Visit Consent',
+                'alcohol-consent' : 'Alcohol Consent',
+                'dietary-requirements' : 'Dietary Requirements',
+                'medication' : 'Medication',
+                'health-and-welling' : 'Health And Welling',
+                'difficulties-and-disabilities' : 'Difficulties And Disabilities'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No student participants found.') }}
+    {% endif %}
+{% endblock %}

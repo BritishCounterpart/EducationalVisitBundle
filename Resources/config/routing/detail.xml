@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="cis_educational_visit.detail.add" path="/add">
+        <default key="_controller">CisEducationalVisitBundle:Detail:add</default>
+    </route>
+
+    <route id="cis_educational_visit.detail.edit" path="/{id}/edit">
+        <default key="_controller">CisEducationalVisitBundle:Detail:edit</default>
+    </route>
+
+    <route id="cis_educational_visit.detail.delete" path="/{id}/delete">
+        <default key="_controller">CisEducationalVisitBundle:Detail:delete</default>
+    </route>
+
+    <route id="cis_educational_visit.detail.finance_codes" path="/{id}/finance-codes">
+        <default key="_controller">CisEducationalVisitBundle:Detail:financeCodes</default>
+    </route>
+
+    <route id="cis_educational_visit.detail.cancel" path="/{id}/cancel">
+        <default key="_controller">CisEducationalVisitBundle:Detail:cancel</default>
+    </route>
+
+    <route id="cis_educational_visit.detail.complete" path="/{id}/complete">
+        <default key="_controller">CisEducationalVisitBundle:Detail:complete</default>
+    </route>
+
+    <route id="cis_educational_visit.detail" path="/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Detail:index</default>
+    </route>
+    
+</routes>

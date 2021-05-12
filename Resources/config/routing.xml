@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+    
+    <route id="cis_educational_visit" path="/">
+        <default key="_controller">CisEducationalVisitBundle:Home:index</default>
+    </route>
+    
+    <route id="cis_educational_visit.search" path="/search">
+        <default key="_controller">CisEducationalVisitBundle:Home:search</default>
+    </route>        
+
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/detail.xml" prefix="/detail" />
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/expenses_and_income.xml" prefix="/expenses-and-income" />
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/participant.xml" prefix="/participant" />
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/payment.xml" prefix="/payments" />
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/itinerary.xml" prefix="/itinerary" />
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/student.xml" prefix="/student" />
+    <import resource="@CisEducationalVisitBundle/Resources/config/routing/approval.xml" prefix="/approval" />
+
+</routes>

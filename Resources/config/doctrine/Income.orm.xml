@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Cis\EducationalVisitBundle\Entity\Income" table="PETROC_EDUCATIONAL_VISIT_INCOME">
+
+        <id name="id" type="integer" column="object_id">
+            <generator strategy="SEQUENCE" />
+            <sequence-generator sequence-name="record_id" allocation-size="1" />
+        </id>
+
+        <field name="createdOn" column="timestamp" type="datetime" nullable="false" />
+        <field name="incomeStudent" column="income_student" type="float" nullable="false" />
+        <field name="incomeCollege" column="income_college" type="float" nullable="false" />
+        <field name="incomeOther" column="income_other" type="float" nullable="false" />
+        <field name="incomeOtherFrom" column="income_other_from" type="string" nullable="true" />
+
+        <field name="deletedOn" column="deleted_on" type="datetime" nullable="true" />
+
+        <one-to-one field="visit" target-entity="Visit" inversed-by="expenses" nullable="false" >
+            <join-column name="petroc_educational_visit" referenced-column-name="object_id" />
+        </one-to-one>
+
+        <gedmo:soft-deleteable field-name="deletedOn" />
+
+    </entity>
+
+</doctrine-mapping>

@@ -1,0 +1,14 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Delete Educational Visit{% endblock %}
+{% block content_heading %}Delete Educational Visit{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+        {{ petroc_alert('Confirm you want to delete the following educational visit: <b>' ~ visit.title ~ '</b>.', 'danger') }}
+        {{ petroc_buttons({
+            'Confirm' : 'submit',
+            'Cancel' : petroc_path('cis_educational_visit.detail', visit)
+        }) }}
+    {{ form_end(form) }}
+{% endblock %}

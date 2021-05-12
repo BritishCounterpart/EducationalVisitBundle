@@ -1,0 +1,25 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: No Portal Access{% endblock %}
+{% block content_heading %}No Portal Access{% endblock %}
+
+{% block content %}
+    {% if students|length > 0 %}
+        {% set body = [] %}
+        {% for student in students %}
+            {% set body = petroc_push(body, {
+                'id-number' : app_student_link(student.IdNumber),
+                'name' : student|init_cap_name
+            }) %}
+        {% endfor %}
+            {{ petroc_table({
+                header : {
+                    'id-number' : 'ID Number',
+                    'name' : 'Name'
+                },
+                body : body
+            }) }}
+    {% else %}
+        {{ no_records('No students found without portal access.') }}
+    {% endif %}
+{% endblock %}

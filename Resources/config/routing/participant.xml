@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+    
+    <route id="cis_educational_visit.participants.refresh_students" path="/refresh-students/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:refreshStudents</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.exclude_student" path="/exclude-student/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:excludeStudent</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.unexclude_student" path="/unexclude-student/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:unexcludeStudent</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.no_portal_access" path="/no-portal-access/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:noPortalAccess</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.marketing_consent" path="/marketing-consent/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:marketingConsent</default>
+        <default key="_format">pdf</default>
+        <default key="_zoom">0.8</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.osa_7_contact_list" path="/osa-7-contact-list/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:osa7ContactList</default>
+        <default key="_format">pdf</default>
+        <default key="_zoom">0.8</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.add_visit_consent" path="/add-visit-consent/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:addVisitConsent</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.add_staff_participant" path="/add-staff-participant/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:addStaffParticipant</default>
+    </route>
+
+    <route id="cis_educational_visit.participants.delete_staff_participant" path="/delete-staff-participant/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:deleteStaffParticipant</default>
+    </route>
+
+    <route id="cis_educational_visit.participants" path="/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Participant:index</default>
+    </route>        
+    
+</routes>

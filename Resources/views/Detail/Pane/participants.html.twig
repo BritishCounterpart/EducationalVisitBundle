@@ -1,0 +1,15 @@
+{% set content %}
+    {{ dl_start() }}
+        {{ dl_row('Proposed number of students', visit.proposedNoStudents) }}
+        {{ dl_row('Minimum number of students', visit.minimumStudents) }}
+        {{ dl_row('Maximum number of students', visit.maximumStudents) }}
+        {{ dl_row('Proposed number of staff', visit.proposedNoStaff) }}
+    {{ dl_end() }}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Participants',
+     icon : 'fa.users',
+     type : 'info',
+     content : content
+}) }}

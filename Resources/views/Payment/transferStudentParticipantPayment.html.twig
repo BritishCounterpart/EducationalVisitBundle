@@ -1,0 +1,50 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+{% set student = studentParticipant.student %}
+{% block title %}{{ parent() }} :: Transfer {{ student|init_cap_name }} - {{ visit.title }}{% endblock %}
+{% block content_heading %}Transfer {{ student|init_cap_name }} - {{ visit.title }}{% endblock %}
+
+{% block content %}
+    {{ petroc_alert('<b>Transfer Amount: </b>' ~ list.fromPaymentAmount|format_money, 'info') }}
+    {% if list|length > 0 %}
+        {% set body = [] %}
+        {% for item in list %}
+            {% set fromStudentParticipant = item.fromStudentParticipant %}
+            {% set toStudentParticipant = item.toStudentParticipant %}
+            {% set toVisit = toStudentParticipant.visit %}
+            {% set payment = item.payment %}
+            {% set actions %}
+                <div class="btn-group">
+                    {{ petroc_button({
+                        url : petroc_path('cis_educational_visit.payments.transfer_payment_to_student_participant', {
+                            fromStudentParticipant : fromStudentParticipant.id,
+                            toStudentParticipant : toStudentParticipant.id,
+                        }),
+                        brand : 'danger',
+                        text : 'Trasfer To',
+                        icon : 'fa.cash-register'
+                    }) }}
+                </div>
+            {% endset %}
+            {% set body = petroc_push(body, {
+                'ev-number' : toVisit.evNumber,
+                'visit' : toVisit.title,
+                'total-to-pay' : payment.requiredAmount|format_money,
+                'total-outstanding' : payment.remainingAmount|format_money,
+                'actions' : actions
+            }) %}
+        {% endfor %}
+
+        {{ petroc_table({
+            header : {
+                'ev-number' : 'EV Number',
+                'visit' : 'Visit',
+                'total-to-pay' : 'Total to Pay',
+                'total-outstanding' : 'Total Outstanding',
+                'actions' : 'Actions'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No eligible visits found.') }}
+    {% endif %}
+{% endblock %}

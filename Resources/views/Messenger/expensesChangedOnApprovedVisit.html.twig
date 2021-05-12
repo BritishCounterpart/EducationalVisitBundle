@@ -1,0 +1,35 @@
+{% extends '/email.html.twig' %}
+
+{% block content %}
+    {{ display.paragraph('Hi,') }}
+
+    {{ display.paragraph('The expenses have changed on the following approved educational visit: ' ~ visit.title) }}
+
+    {{ display.paragraph('Original Expenses:') }}
+
+    {% set header = ['Type', 'Description', 'Amount'] %}
+
+    {% set body = [] %}
+    {% for expense in originalExpenses %}
+        {% set body = petroc_push(body, [expense.type|app_general_code('EDUCATIONAL_VISIT_EXPENSE'), expense.description, expense.amount|format_money('text')]) %}
+    {% endfor %}
+
+    {{ display.table(header, body) }}
+
+    {{ display.paragraph('New Expenses:') }}
+
+    {% set header = ['Type', 'Description', 'Amount'] %}
+
+    {% set body = [] %}
+    {% for expense in visit.expenses %}
+        {% set body = petroc_push(body, [expense.type|app_general_code('EDUCATIONAL_VISIT_EXPENSE'), expense.description, expense.amount|format_money('text')]) %}
+    {% endfor %}
+
+    {{ display.table(header, body) }}
+
+    {{ display.action(petroc_url('cis_educational_visit.expenses_and_income', visit), 'View Expenses') }}
+
+    {{ display.signature('Thank You') }}
+{% endblock %}
+
+{% block subject %}Educational Visit Expenses Changed{% endblock %}

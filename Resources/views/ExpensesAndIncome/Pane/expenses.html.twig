@@ -1,0 +1,37 @@
+{% set expenses = list.expenses %}
+{% set content %}
+    {% if expenses|length > 0 %}
+        {% set body =[] %}
+        {% set body %}
+            {% for expense in expenses %}
+                <tr>
+                    <td class="type">{{ expense.type|app_general_code('EDUCATIONAL_VISIT_EXPENSE') }}</td>
+                    <td class="description">{{ expense.description }}</td>
+                    <td class="amount">{{ expense.amount|format_money|raw }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="total"></td>
+                <td class="cost">{{ list.totalExpense|format_money|raw }}</td>
+            </tr>
+        {% endset %}
+
+        {{ petroc_table({
+            header : {
+                'type' : 'Type',
+                'description' : 'Description',
+                'amount' : 'Amount'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No expenses found.') }}
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+    heading : 'Expenses',
+    icon : 'fa.money-check',
+    type : 'info',
+    content : content
+}) }}

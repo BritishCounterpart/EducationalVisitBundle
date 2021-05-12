@@ -1,0 +1,24 @@
+{% extends '/email.html.twig' %}
+
+{% block content %}
+    {{ display.paragraph('Hi,') }}
+
+    {{ display.paragraph('The following Educational Visit requires an EV number and cost code:') }}
+
+    {{ display.dl({
+        'Visit' : visit.title,
+        'Academic year' : visit.academicYear|app_academic_year,
+        'Organiser' : visit.organiser|init_cap_name,
+        'Full payment amount' : visit.fullPaymentAmount|format_money('text'),
+        'Full payment deadline' : visit.fullPaymentDeadline|petroc_date,
+        'First payment amount' : visit.firstPaymentAmount|format_money('text'),
+        'First payment deadline' : visit.firstPaymentDeadline|petroc_date
+
+    }) }}
+
+    {{ display.action(petroc_url('cis_educational_visit.detail.finance_codes', visit), 'Add Information') }}
+
+    {{ display.signature('Thank You') }}
+{% endblock %}
+
+{% block subject %}Educational Visit Requiring Finance Codes{% endblock %}

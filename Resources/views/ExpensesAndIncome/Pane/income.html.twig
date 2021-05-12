@@ -1,0 +1,43 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% set income = list.income %}
+
+{% set content %}
+    {% if visit.hasIncome or list.actualStudentIncome > 0 %}
+        <table class="table">
+            <tr>
+                <th>From</th>
+                <th>Planned</th>
+                <th>Actual</th>
+            </tr>
+            <tr>
+                <th scope="row">Students {{ display.tooltip('This is the total that all students pay, it is not per student.') }}</th>
+                <td>{{ income.incomeStudent|format_money|raw }}</td>
+                <td>{{ list.actualStudentIncome|format_money|raw }}</td>
+            </tr>
+            <tr>
+                <th scope="row">College</th>
+                <td>{{ income.incomeCollege|format_money|raw }}</td>
+                <td>{{ income.incomeCollege|format_money|raw }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Other {{ display.tooltip('This is the total income that isn’t coming from the students or college.') }}<span class="text-muted">{{ income.incomeOtherFrom }}</span></th>
+                <td>{{ income.incomeOther|format_money|raw }}</td>
+                <td>{{ income.incomeOther|format_money|raw }}</td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>{{ list.plannedTotalIncome|format_money|raw }}</td>
+                <td>{{ list.actualTotalIncome|format_money|raw }}</td>
+            </tr>
+        </table>
+    {% else %}
+        {{ no_records('No income found.') }}
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+    heading : 'Income',
+    icon : 'fa.piggy-bank',
+    type : 'success',
+    content : content
+}) }}

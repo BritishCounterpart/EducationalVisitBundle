@@ -1,0 +1,30 @@
+{% set cohortObject = constant('Cis\\EducationalVisitBundle\\Entity\\Visit::COHORT_OBJECT') %}
+{% set returnUrl = petroc_path('cis_educational_visit.participants.refresh_students', visit) %}
+
+{% set heading %}
+    Cohort <small class="text-muted text-small">Students Imported Hourly</small>
+    <div class="btn-group pull-right">
+        {% if has_access('cis_educational_visit.edit', visit) %}
+            {{ petroc_button({
+                url : app_cohort_add_url(
+                    constant('App\\Cohort\\StudentProvider::ID'),
+                    cohortObject,
+                    visit.id,
+                    returnUrl
+                ),
+                action : 'add'
+            }) }}
+        {% endif %}
+    </div>
+{% endset %}
+
+{% set content %}
+    {{ app_cohort_list(cohortObject, visit.id, returnUrl) }}
+{% endset %}
+
+{{ petroc_pane({
+    heading : heading,
+    icon : 'fa.users',
+    type : 'success',
+    content : content
+}) }}

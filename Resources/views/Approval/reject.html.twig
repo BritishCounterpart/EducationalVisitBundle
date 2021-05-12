@@ -1,0 +1,17 @@
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Reject{% endblock %}
+{% block content_heading %}Reject{% endblock %}
+
+{% block content %}
+    {{ dl({
+        'Visit' : visit.title,
+        'Academic Year' : visit.academicYear|app_academic_year,
+        'Organiser' : visit.organiser
+
+    }) }}
+    {{ form_start(form, {view_options : {submit : 'Reject', cancel : petroc_path('cis_educational_visit.detail', visit) }} ) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.reason) }}
+    {{ form_end(form) }}
+{% endblock %}

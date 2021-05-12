@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+    
+    <route id="cis_educational_visit.payments.change_student_participant_payment_amount" path="/change-student-participant-payment-amount/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Payment:changeStudentParticipantPaymentAmount</default>
+    </route>
+
+    <route id="cis_educational_visit.payments.transfer_student_participant_payment" path="/transfer-student-participant-payment/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Payment:transferStudentParticipantPayment</default>
+    </route>
+
+    <route id="cis_educational_visit.payments.transfer_payment_to_student_participant" path="/transfer-payment/{fromStudentParticipant}/to/{toStudentParticipant}">
+        <default key="_controller">CisEducationalVisitBundle:Payment:transferPaymentToStudentParticipant</default>
+    </route>
+
+    <route id="cis_educational_visit.payments" path="/{id}">
+        <default key="_controller">CisEducationalVisitBundle:Payment:index</default>
+    </route>
+    
+</routes>

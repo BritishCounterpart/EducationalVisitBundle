@@ -1,0 +1,37 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '::print.html.twig' %}
+
+{% block heading %}EXPLICIT CONSENT TO USE MEDIA MATERIAL FOR PUBLICITY PURPOSES{% endblock %}
+
+{% block content %}
+    <p>I hereby give my authorisation for Petroc to use any media containing my image for internal and external publicity (including publications, newspapers, film and social media (Twitter, Facebook and Youtube ). I understand that, under the terms of the Data Protection Act 1998, I am giving explicit consent to me being used for this purpose only and that I have the right to refuse consent.</p>
+
+    {% set body =[] %}
+    {% for studentParticipant in list.studentParticipants %}
+        {% if studentParticipant.noLongerGoing != true %}
+            {% set student = studentParticipant.student %}
+            {% set body = petroc_push(body, {
+                'id-number' : student.idNumber,
+                'name' : student|init_cap_name,
+                'signed' : '',
+                'date' : '',
+            }) %}
+        {% endif %}
+    {% endfor %}
+    {{ petroc_table({
+        header : {
+            'id-number' : 'ID Number',
+            'name' : 'Name',
+            'signed' : 'Signed',
+            'date' : 'Date'
+        },
+        body : body
+    }) }}
+    <p><b>Marketing Use Only:</b></p>
+    {{ dl_start() }}
+        {{ dl_row('File Location:', '') }}
+        {{ dl_row('Photo Ref:', '') }}
+        {{ dl_row('Input Ref:', '') }}
+        {{ dl_row('Input By:', '') }}
+    {{ dl_end() }}
+{% endblock %}

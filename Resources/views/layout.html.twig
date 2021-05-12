@@ -1,0 +1,35 @@
+{% extends '::layout.html.twig' %}
+
+{% block title %}
+{{ parent() }} :: Educational Visits
+{% endblock %}
+
+{% block sub_app_nav -%}
+    {% if visit is defined %}
+        {% if visit != null %}
+            <li>{{ petroc_link(petroc_path('cis_educational_visit.detail', visit), visit.title) }}</li>
+        {% endif %}
+    {% endif %}
+{%- endblock %}
+
+{% block sub_app_nav_links -%}
+    {% if visit is defined %}
+        {% if visit != null %}
+         <li>{{ petroc_link(petroc_path('cis_educational_visit.expenses_and_income', visit), 'Expenses & Income') }}</li>
+         <li>{{ petroc_link(petroc_path('cis_educational_visit.participants', visit), 'Participants') }}</li>
+        {% if visit.fullPaymentAmount > 0  %}
+                <li>{{ petroc_link(petroc_path('cis_educational_visit.payments', visit), 'Payments') }}</li>
+        {% endif %}
+         <li>{{ petroc_link(petroc_path('cis_educational_visit.itinerary', visit), 'Itinerary') }}</li>
+        {% endif %}
+    {% endif %}
+{%- endblock %}
+
+{% block app_nav_links %}
+    <li>{{ petroc_link(petroc_path('cis_educational_visit.search'), 'Search') }}</li>
+    <li>{{ petroc_link('/cms/#/area/1023979829', 'Help') }}</li>
+{% endblock %}
+
+{% block app_nav %}
+    <li>{{ petroc_link(petroc_path('cis_educational_visit'), 'Educational Visits') }}</li>
+{% endblock %}

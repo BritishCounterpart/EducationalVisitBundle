@@ -1,0 +1,27 @@
+{% set action = 'Add' %}
+{% if visit.evNumber != null or visit.costCode != null %}
+    {% set action = 'Edit '%}
+{% endif %}
+
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: {{ action }} Finance Codes{% endblock %}
+{% block content_heading %}{{ action }} Finance Codes{% endblock %}
+
+{% block content %}
+    {{ dl({
+        'Visit' : visit.title,
+        'Academic Year' : visit.academicYear|app_academic_year,
+        'Organiser' : visit.organiser,
+        'Full payment amount' : visit.fullPaymentAmount|format_money,
+        'Full payment deadline' : visit.fullPaymentDeadline|petroc_date,
+        'First payment amount' : visit.firstPaymentAmount|format_money,
+        'First payment deadline' : visit.firstPaymentDeadline|petroc_date
+
+    }) }}
+    {{ form_start(form, {view_options : {submit : action, cancel : petroc_path('cis_educational_visit.detail', visit) }} ) }}
+    {{ form_errors(form) }}
+        {{ form_row(form.evNumber) }}
+        {{ form_row(form.costCode) }}
+    {{ form_end(form) }}
+{% endblock %}

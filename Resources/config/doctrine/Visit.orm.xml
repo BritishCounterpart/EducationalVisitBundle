@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Cis\EducationalVisitBundle\Entity\Visit" table="PETROC_EDUCATIONAL_VISIT" repository-class="Cis\EducationalVisitBundle\Repository\VisitRepository">
+
+        <id name="id" type="integer" column="object_id">
+            <generator strategy="SEQUENCE" />
+            <sequence-generator sequence-name="record_id" allocation-size="1" />
+        </id>
+
+        <field name="createdOn" column="timestamp" type="datetime" nullable="false" />
+        <field name="academicYear" column="academic_year" type="integer" nullable="false" />
+        <field name="title" column="title" type="string" nullable="false" />
+        <field name="category" column="category" type="string" nullable="true" />
+        <field name="description" column="description" type="string" nullable="true" />
+        <field name="location" column="location" type="string" nullable="true" />
+        <field name="status" column="status" type="string" nullable="false" />
+        <field name="organiserMobile" column="organiser_mobile" type="string" nullable="true" />
+        <field name="organiserMobileSecond" column="organiser_mobile_second" type="string" nullable="true" />
+        <field name="startDate" column="start_date" type="date" nullable="false" />
+        <field name="endDate" column="end_date" type="date" nullable="true" />
+        <field name="startTime" column="start_time" type="time" nullable="true" />
+        <field name="endTime" column="end_time" type="time" nullable="true" />
+        <field name="recurrencePattern" column="recurrence_pattern" type="string" nullable="true" />
+        <field name="proposedNoStudents" column="proposed_no_students" type="integer" nullable="true" />
+        <field name="proposedNoStaff" column="proposed_no_staff" type="integer" nullable="true" />
+        <field name="minimumStudents" column="minimum_students" type="integer" nullable="true" />
+        <field name="maximumStudents" column="maximum_students" type="integer" nullable="true" />
+        <field name="fullPaymentAmount" column="full_payment_amount" type="float" nullable="true" />
+        <field name="fullPaymentDeadline" column="full_payment_deadline" type="date" nullable="true" />
+        <field name="firstPaymentAmount" column="first_payment_amount" type="float" nullable="true" />
+        <field name="firstPaymentDeadline" column="first_payment_deadline" type="date" nullable="true" />
+        <field name="evNumber" column="ev_number" type="string" nullable="true" />
+        <field name="costCode" column="cost_code" type="string" nullable="true" />
+        <field name="secondContactName" column="second_contact_name" type="string" nullable="true" />
+        <field name="secondContactNumber" column="second_contact_number" type="string" nullable="true" />
+        <field name="secondContactMobile" column="second_contact_mobile" type="string" nullable="true" />
+        <field name="showOnCalendar" column="show_on_calendar" type="boolean" nullable="false" />
+        <field name="paymentCompleteEmailSubject" column="payment_complete_email_subject" type="string" nullable="true" />
+        <field name="paymentCompleteEmailContent" column="payment_complete_email_content" type="string" nullable="true" />
+        <field name="paymentCompleteEmailReplyTo" column="payment_complete_email_reply_to" type="string" nullable="true" />
+        <field name="hasExpenses" column="has_expenses" type="boolean" nullable="false" />
+        <field name="osaRequired" column="osa_required" type="boolean" nullable="false" />
+        <field name="visitFull" column="visit_full" type="boolean" nullable="false" />
+        <field name="issues" column="issues" type="simple_array" nullable="true" />
+        <field name="deletedOn" column="deleted_on" type="datetime" nullable="true" />
+
+        <many-to-many field="riskAssessments" target-entity="App\Entity\Misc\RiskAssessment">
+            <join-table name="PETROC_EDUCATIONAL_VISIT_RISK_ASSESSMENT">
+                <join-columns>
+                    <join-column name="petroc_educational_visit" referenced-column-name="object_id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="petroc_risk_assessment" referenced-column-name="object_id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-one field="area" target-entity="Area" nullable="false" >
+            <join-column name="petroc_work_area" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="organiser" target-entity="App\Entity\Employee\Employee" nullable="false" >
+            <join-column name="organiser" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="event" target-entity="App\Entity\Calendar\Event" nullable="true" >
+            <join-column name="petroc_cc_event" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="emergencyContact" target-entity="App\Entity\Employee\Employee" nullable="true" >
+            <join-column name="emergency_contact" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <one-to-many field="expenses" target-entity="Expense" mapped-by="visit" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="createdOn" direction="ASC" />
+            </order-by>
+        </one-to-many>
+
+        <one-to-many field="studentParticipants" target-entity="StudentParticipant" mapped-by="visit" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="createdOn" direction="ASC" />
+            </order-by>
+        </one-to-many>
+
+        <one-to-many field="staffParticipants" target-entity="StaffParticipant" mapped-by="visit" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="createdOn" direction="ASC" />
+            </order-by>
+        </one-to-many>
+
+        <one-to-one field="income" target-entity="Income" mapped-by="visit" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <one-to-one field="itinerary" target-entity="Itinerary" mapped-by="visit" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <gedmo:soft-deleteable field-name="deletedOn" />
+
+        </entity>
+
+</doctrine-mapping>

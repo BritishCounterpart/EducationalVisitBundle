@@ -1,0 +1,77 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% set content %}
+    {% set idNumbers = [] %}
+    {% if list.studentParticipantsPayments|length > 0 %}
+        {% set body = [] %}
+        {% for studentParticipantsPayment in list.studentParticipantsPayments %}
+            {% set studentParticipant = studentParticipantsPayment.studentParticipant %}
+            {% set student = studentParticipant.student %}
+            {% set payment = studentParticipantsPayment.payment %}
+            {% set idNumbers = petroc_push(idNumbers, student.idNumber) %}
+            {% set actions %}
+                <div class="btn-group">
+                    {% if has_access('cis_educational_visit.edit', visit) and studentParticipant.hasVisitConsent == 'No' %}
+                        {{ petroc_button({
+                            url : petroc_path('cis_educational_visit.participants.add_visit_consent', studentParticipant),
+                            action : 'add',
+                            text : 'Add Visit Consent'
+                        }) }}
+                    {% endif %}
+                    {% if has_access('cis_educational_visit.edit', visit) and studentParticipant.noLongerGoing == false %}
+                        {{ petroc_button({
+                            url : petroc_path('cis_educational_visit.participants.exclude_student', studentParticipant),
+                            action : 'delete'
+                        }) }}
+                    {% endif %}
+                </div>
+            {% endset %}
+            {% set body = petroc_push(body, {
+                'count' : loop.index,
+                'id-number' : app_student_link(student.IdNumber),
+                'name' : student|init_cap_name,
+                'age' : student.ageToday,
+                'osa-consent' : display.participant_missing_osa_consent(studentParticipant),
+                'visit-consent' : display.participant_visit_consent(studentParticipant),
+                'confirmed' : display.participant_confirmed(payment),
+                'can-go' : display.participant_can_go(studentParticipant, payment),
+                'actions' : actions
+            }) %}
+        {% endfor %}
+
+        {{ petroc_table({
+            header : {
+                'count' : '#',
+                'id-number' : 'ID Number',
+                'name' : 'Name',
+                'age' : 'Age',
+                'osa-consent' : 'OSA Consent',
+                'visit-consent' : 'Visit Consent',
+                'confirmed' : 'Confirmed',
+                'can-go' : 'Can Go',
+                'actions' : 'Actions'
+            },
+            body : body
+        }) }}
+    {% else %}
+        {{ no_records('No student participants found.') }}
+    {% endif %}
+{% endset %}
+
+{% set footer %}
+    {% if idNumbers|length > 0 %}
+        <div class="pull-left">
+            {{ button_link('?_format=csv', 'Mailmerge', 'fa.mail-bulk') }}
+        </div>
+        <div class="pull-right">
+            {{ app_message_students_button(idNumbers, 'Create Message') }}
+        </div>
+    {% endif %}
+{% endset %}
+
+{{ petroc_pane({
+    heading : 'Students',
+    icon : 'fa.user-graduate',
+    type : 'info',
+    content : content,
+    footer : footer
+}) }}

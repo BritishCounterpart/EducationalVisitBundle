@@ -1,0 +1,11 @@
+{% extends 'CisEducationalVisitBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Add Staff Participant{% endblock %}
+{% block content_heading %}Add Staff Participant{% endblock %}
+
+{% block content %}
+    {{ form_start(form, {view_options : {submit : 'Add', cancel : petroc_path('cis_educational_visit.participants', visit) }} ) }}
+    {{ form_errors(form) }}
+        {{ form_row(form.employee) }}
+    {{ form_end(form) }}
+{% endblock %}

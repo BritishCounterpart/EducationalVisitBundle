@@ -1,0 +1,14 @@
+{% set content %}
+    {{ dl_start() }}
+        {{ dl_row('Organiser', visit.organiser) }}
+        {{ dl_row('Mobile', visit.organiserMobile) }}
+        {{ dl_row('2nd mobile', visit.organiserMobileSecond) }}
+    {{ dl_end() }}
+{% endset %}
+
+{{ petroc_pane({
+     heading : 'Organiser',
+     icon : 'fa.user',
+     type : 'info',
+     content : content
+}) }}

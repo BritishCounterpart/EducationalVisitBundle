@@ -1,0 +1,19 @@
+{% import '@CisEducationalVisit/_macros.html.twig' as display %}
+{% extends '@CisEducationalVisit/Student/layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Visit Consent{% endblock %}
+{% block content_heading %}Visit Consent{% endblock %}
+
+{% block content %}
+    {% set content %}
+        I give permission for {{ student|init_cap_name }} to take part in the {{ visit.title }} from {{ visit.startDate|petroc_date }} to {{ visit.endDate|petroc_date|default(visit.startDate|petroc_date) }}.  I acknowledge that students will need to make transport arrangements to and from Petroc outside of normal college hours on the {{ visit.startDate|petroc_date }} and {{ visit.endDate|petroc_date|default(visit.startDate|petroc_date) }}.
+    {% endset %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ petroc_alert(content, 'info') }}
+        {{ petroc_buttons({
+            'Give Consent' : 'submit',
+            'Cancel' : petroc_path('cis_educational_visit.student', student)
+        }) }}
+    {{ form_end(form) }}
+{% endblock %}

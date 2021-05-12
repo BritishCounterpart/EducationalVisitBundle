@@ -1,0 +1,33 @@
+{% extends '@CisEducationalVisit/layout.html.twig' %}
+{% set itinerary = visit.itinerary %}
+
+{% block title %}{{ parent() }} :: Itinerary{% endblock %}
+{% block content_heading %}Itinerary{% endblock %}
+{% block content_heading_buttons %}
+    <div class="btn-group">
+        {% if has_access('cis_educational_visit.edit', visit) %}
+            {{ petroc_button({
+                url : petroc_path('cis_educational_visit.itinerary.upload', visit),
+                text : 'Upload',
+                action : 'add'
+            }) }}
+            {% if itinerary != null %}
+                {{ petroc_button({
+                    url : petroc_path('cis_educational_visit.itinerary.delete', itinerary),
+                    text : 'Delete',
+                    action : 'delete'
+                }) }}
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if itinerary != null %}
+        <div class="well">
+            <object id="pdf-object" data="{{ petroc_path('cis_educational_visit.itinerary.download', itinerary) }}" type="application/pdf">
+                {{ petroc_link(petroc_path('cis_educational_visit.itinerary.download', itinerary), 'Download Itinerary', { download : true}) }}
+            </object>
+        </div>
+    {% endif %}
+{% endblock %}

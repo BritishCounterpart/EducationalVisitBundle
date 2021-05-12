@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Cis\EducationalVisitBundle\Entity\AreaApprover" read-only="true" table="PETROC_V_EDUCATIONAL_VISIT_AREA_APPROVER">
+
+        <id name="id" type="integer" column="object_id" />
+
+        <many-to-one field="area" target-entity="Area" inversed-by="approvers">
+            <join-column name="petroc_work_area" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="employee" target-entity="App\Entity\Employee\Employee" nullable="false" >
+            <join-column name="employee" referenced-column-name="object_id" />
+        </many-to-one>
+
+        <many-to-one field="user" target-entity="App\Entity\User" nullable="false" >
+            <join-column name="petroc_user" referenced-column-name="object_id" />
+        </many-to-one>
+
+    </entity>
+
+</doctrine-mapping>
